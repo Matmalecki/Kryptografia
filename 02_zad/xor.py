@@ -43,19 +43,18 @@ def Encrypt():
     except IOError:
         print ("Brak pliku z kluczem")
         return
-
-    foutput = open("encrypt.txt","w")
     key = fkey.readline().rstrip('\n')
     if (len(key) != lengthOfLine):
         print ("Zla dlugosc klucza")
         return
+    foutput = open("encrypt.txt","w")
+
+
     result = [x.rstrip('\n') for x in finput.readlines()]
     ret =''
     for line in result :
         for i in range(0, lengthOfLine):
             c = (ord(line[i]) ^ ord(key[i])) + spaceAscii
-            if (c==0):
-                c=126
             ret = ret + chr(c)
         foutput.write (ret+'\n')
         ret = ''
