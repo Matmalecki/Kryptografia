@@ -1,4 +1,5 @@
 import sys
+import io
 
 lengthOfLine = 16
 spaceAscii = 32
@@ -47,7 +48,7 @@ def Encrypt():
     if (len(key) != lengthOfLine):
         print ("Zla dlugosc klucza")
         return
-    foutput = open("encrypt.txt","w")
+    foutput = io.open("encrypt.txt","w", encoding='utf-8')
 
 
     result = [x.rstrip('\n') for x in finput.readlines()]
@@ -61,7 +62,7 @@ def Encrypt():
 
 def Kryptoanalysis():
     try:
-        finput = open("encrypt.txt", "r")
+        finput = io.open("encrypt.txt", "r", encoding='utf-8')
     except IOError:
         print ("Brak pliku z tekstem zaszyfrowanym")
         return
