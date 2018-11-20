@@ -90,10 +90,12 @@ def Kryptoanalysis():
                     else:
                         key[column] = chr(spaceAscii ^ array[row+1][column])
                         break
-                else :
-                    print (array[row][column])
+                elif xorM23 != 0 :
                     key[column] = chr(spaceAscii ^ array[row][column])
-
+                    break
+                else :
+                    key[column] = chr(spaceAscii ^ array[row+1][column])
+                    break
 
     print ("Uzyskany klucz: ")
     k = ''
