@@ -1,9 +1,9 @@
 from PIL import Image
 import hashlib
 
-blockWidth = 3
-blockHeight = 4
-key = b"key ktorym szyfruje"
+blockWidth = 4
+blockHeight = 3
+key = b"Ds1wq&T_xaL9q`nIa8!"
 
 def min(a,b):
     if (a >= b):
@@ -27,15 +27,22 @@ def EncryptEBC(a):
     bytes = md.digest()
     for i in range(0, len(a)):
         a[i] = bytes[i]
+        if (i % 15 == 0):
+            bytes+=md.digest()
+
     return a
 
 def EncryptCBC(a):
     md = hashlib.md5(key)
     md.update(repr(a).encode('utf-8'))
     bytes = md.digest()
-    switchKey(bytes)
+
     for i in range(0, len(a)):
         a[i] = bytes[i]
+        if (i % 15 == 0):
+            bytes+=md.digest()
+
+    switchKey(repr(a).encode('utf-8'))
     return a
 
 
@@ -68,11 +75,29 @@ def ProcessBlockCBC(image,x,y,width,height):
             k+=1
 
 def createBlocks():
-    fkey = open("key.txt", "r")
-    switchKey(fkey.readline().encode('utf-8'))
+    try:
+        fkey = open("key.txt","r")
+        switchKey(fkey.readline().encode('utf-8'))
+    except IOError:
+        print ("Brak pliku z kluczem")
+        print ("Program korzysta  domyslnego klucza: \"Ds1wq&T_xaL9q`nIa8!\"" )
+
+    try:
+        im1 = Image.open("plain.bmp").convert('L')
+    except IOError:
+        print ("Brak pliku plain.bmp")
+        return
+    width, height = im1.size
+    pixels1 = im1.load()
+    for x in range(0, width , blockWidth):
+        for y in range(0, height ,blockHeight):
+            ProcessBlockEBC(pixels1, x, y, min(width - x, blockWidth), min( height - y, blockHeight))
+
+    im1.save("ecb_crypto.bmp")
+
 
     im = Image.open("plain.bmp").convert('L')
-    width, height = im.size
+
     pixels = im.load()
     for x in range(0, width , blockWidth):
         for y in range(0, height ,blockHeight):
@@ -80,13 +105,7 @@ def createBlocks():
 
     im.save("cbc_crypto.bmp")
 
-    im1 = Image.open("plain.bmp").convert('L')
-    pixels1 = im1.load()
-    for x in range(0, width , blockWidth):
-        for y in range(0, height ,blockHeight):
-            ProcessBlockEBC(pixels1, x, y, min(width - x, blockWidth), min( height - y, blockHeight))
 
-    im1.save("ebc_crypto.bmp")
 
 
 createBlocks()
