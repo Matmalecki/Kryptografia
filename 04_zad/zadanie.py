@@ -12,6 +12,10 @@ def access_bit(data, num):
 if (len(sys.argv) > 1 ):
     bashCommand  = "cat hash.pdf personal.txt  | " + sys.argv[1]
     bashCommand_ = "cat hash.pdf personal_.txt | " + sys.argv[1]
+else :
+    print ("Brak argumentu!")
+    print ("w argumencie musi być podana funkcja hashująca np md5sum")
+    sys.exit()
 
 
 output1 = subprocess.getoutput(bashCommand)
